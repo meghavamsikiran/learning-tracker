@@ -20,11 +20,16 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
 
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
-        config.setAllowedOrigins(origins);
+        if ("*".equals(allowedOrigins.trim())) {
+            // Use allowedOriginPatterns for wildcard (compatible with allowCredentials)
+            config.setAllowedOriginPatterns(List.of("*"));
+        } else {
+            List<String> origins = Arrays.asList(allowedOrigins.split(","));
+            config.setAllowedOrigins(origins);
+        }
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
